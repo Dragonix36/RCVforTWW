@@ -38,9 +38,9 @@
     </div>
 
     <script>
-         const repoOwner = "Dragonix36";
-        const repoName = "RCVforTWW";
-        const filePath = "votecount.json";
+        const repoOwner = "Dragonix36"; // Replace with your GitHub username
+        const repoName = "RCVforTWW"; // Replace with your repository name
+        const filePath = "votecount.json"; // Ensure this is correct
         const githubToken = "votecountTWW"; // Replace with your GitHub token
 
         function submitVote() {
@@ -61,6 +61,7 @@
             })
             .then(response => {
                 if (!response.ok) {
+                    console.error('Error fetching existing votes:', response.statusText);
                     throw new Error('Error fetching existing votes: ' + response.statusText);
                 }
                 return response.json();
@@ -91,6 +92,7 @@
                     document.getElementById('voteForm').reset();
                     loadResults();
                 } else {
+                    console.error('Error submitting vote:', response.statusText);
                     throw new Error('Error submitting vote: ' + response.statusText);
                 }
             })
@@ -136,6 +138,7 @@
             })
             .then(response => {
                 if (!response.ok) {
+                    console.error('Error fetching all votes:', response.statusText);
                     throw new Error('Error fetching all votes: ' + response.statusText);
                 }
                 return response.json();
