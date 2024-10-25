@@ -10,6 +10,7 @@
         label { font-weight: bold; display: block; margin-top: 10px; }
         input, select { width: 100%; padding: 8px; margin-top: 5px; }
         button { margin-top: 20px; padding: 10px 15px; font-size: 16px; cursor: pointer; }
+        .error { color: red; }
     </style>
 </head>
 <body>
@@ -39,10 +40,9 @@
     <script>
          const repoOwner = "Dragonix36";
         const repoName = "RCVforTWW";
-        const filePath = "votes.json";
-        const githubToken = "Votescount"; // Replace with your actual GitHub token
+        const filePath = "votecount.json";
+        const githubToken = "Votescount"; // Replace with your GitHub token
 
-        // Function to submit vote and store in votecount.json
         function submitVote() {
             const voterName = document.getElementById('voterName').value;
             const rank2 = document.getElementById('rank2').value;
@@ -59,7 +59,12 @@
             fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
                 headers: { Authorization: `Bearer ${githubToken}` }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error fetching existing votes: ' + response.statusText);
+                }
+                return response.json();
+            })
             .then(fileData => {
                 const content = atob(fileData.content);
                 const jsonData = JSON.parse(content);
@@ -86,16 +91,15 @@
                     document.getElementById('voteForm').reset();
                     loadResults();
                 } else {
-                    alert("Error submitting vote. Please try again.");
+                    throw new Error('Error submitting vote: ' + response.statusText);
                 }
             })
             .catch(error => {
                 console.error("Error:", error);
-                alert("Failed to submit vote.");
+                alert("Failed to submit vote: " + error.message);
             });
         }
 
-        // Function to load and display results from votecount.json
         function loadResults() {
             fetch('votecount.json')
                 .then(response => {
@@ -108,15 +112,14 @@
                     displayResults(data);
                 })
                 .catch(error => {
-                    document.getElementById('results').innerText = 'Error loading results';
+                    document.getElementById('results').innerText = 'Error loading results: ' + error.message;
                     console.error('Error fetching data:', error);
                 });
         }
 
-        // Function to display results
         function displayResults(data) {
             const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = ''; // Clear loading text
+            resultsDiv.innerHTML = '';
 
             data.forEach((vote, index) => {
                 const voteInfo = document.createElement('p');
@@ -125,30 +128,32 @@
             });
         }
 
-        // Load results on page load
         document.addEventListener("DOMContentLoaded", loadResults);
 
-        // Function to view all votes from votecount.json
         function viewAllVotes() {
             fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
                 headers: { Authorization: `Bearer ${githubToken}` }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error fetching all votes: ' + response.statusText);
+                }
+                return response.json();
+            })
             .then(fileData => {
                 const content = atob(fileData.content);
                 const jsonData = JSON.parse(content);
                 displayAllVotes(jsonData);
             })
             .catch(error => {
-                document.getElementById('allVotes').innerText = 'Error loading all votes';
+                document.getElementById('allVotes').innerText = 'Error loading all votes: ' + error.message;
                 console.error("Error fetching all votes:", error);
             });
         }
 
-        // Function to display all votes
         function displayAllVotes(data) {
             const allVotesDiv = document.getElementById('allVotes');
-            allVotesDiv.innerHTML = ''; // Clear loading text
+            allVotesDiv.innerHTML = '';
 
             data.forEach((vote, index) => {
                 const voteInfo = document.createElement('p');
