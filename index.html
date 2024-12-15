@@ -83,8 +83,14 @@
                         message: "Add new vote",
                         content: updatedContent,
                         sha: fileData.sha
+                   
+                    
                     })
+               
+                
                 });
+            
+            
             })
             .then(response => {
                 if (response.ok) {
@@ -92,7 +98,7 @@
                     document.getElementById('voteForm').reset();
                     loadResults();
                 } else {
-                    console.error('Error submitting vote:', response.statusText);
+                    console.error('Error submitting   vote xD:', response.statusText);
                     throw new Error('Error submitting vote: ' + response.statusText);
                 }
             })
@@ -121,7 +127,7 @@
 
         function displayResults(data) {
             const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '';
+            resultsDiv.innerHTML='';
 
             data.forEach((vote, index) => {
                 const voteInfo = document.createElement('p');
@@ -134,7 +140,7 @@
 
         function viewAllVotes() {
             fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
-                headers: { Authorization: `Bearer ${githubToken}` }
+                headers: { Authorization: `Bearer  ${githubToken}` }
             })
             .then(response => {
                 if (!response.ok) {
