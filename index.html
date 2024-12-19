@@ -148,16 +148,20 @@
                     throw new Error('Error fetching all votes: ' + response.statusText);
                 }
                 return response.json();
-            })
+            }
+                 )
             .then(fileData => {
                 const content = atob(fileData.content);
                 const jsonData = JSON.parse(content);
                 displayAllVotes(jsonData);
-            })
+            }
+                 
+                 )
             .catch(error => {
                 document.getElementById('allVotes').innerText = 'Error loading all votes: ' + error.message;
                 console.error("Error fetching all votes:", error);
-            });
+            }
+                  );
         }
 
         function displayAllVotes(data) {
